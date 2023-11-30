@@ -99,7 +99,7 @@ class Dataset(torch.utils.data.Dataset):
         # img = np.array(img.resize((size, size), Image.ANTIALIAS))
 
         # resize to square image
-        img = np.array(img.resize((452, size), Image.LANCZOS))
+        img = np.array(img.resize((size, 452), Image.LANCZOS))
 
         # print("show image from dataset after resize")
         # plt.imshow(img); plt.show()
@@ -117,7 +117,7 @@ class Dataset(torch.utils.data.Dataset):
         # mask = np.array(mask.resize((size, size), Image.ANTIALIAS))
 
         # resize to square image
-        mask = np.array(mask.resize((452, size), Image.LANCZOS))
+        mask = np.array(mask.resize((size, 452), Image.LANCZOS))
 
         # print("show mask from dataset")
         # plt.imshow(mask); plt.show()

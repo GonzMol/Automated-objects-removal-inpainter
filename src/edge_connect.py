@@ -97,8 +97,10 @@ class EdgeConnect():
         
         index = 0
 
-        # # Create an SR object
-        # sr = dnn_superres.DnnSuperResImpl_create()
+        # UPSCALE #
+        # Create an SR object
+        sr = dnn_superres.DnnSuperResImpl_create()
+        # UPSCALE #
 
         for items in test_loader:
             name = self.test_dataset.load_name(index)
@@ -124,18 +126,21 @@ class EdgeConnect():
 
             output = self.postprocess(outputs_merged)[0]
 
-            # print("load original image")
-            # img = Image.open(self.test_dataset.__dict__['data'][0])
-            # width_og, height_og = img.size
+            print("load original image")
+            img = Image.open(self.test_dataset.__dict__['data'][0])
+            width_og, height_og = img.size
 
+            # CLASSIC UPSCALE #
             # print("reshape output")
             # transform = T.ToPILImage()
             # output_ = transform(output)
             # output_ = np.array(output_.resize((width_og, height_og), Image.LANCZOS))
+            # CLASSIC UPSCALE #
 
             path = os.path.join(self.results_path, name)
             print(index, name)
             imsave(output, path)
+
 
             # print('create upscaled image')
             # output_ = Image.open(path)
@@ -143,21 +148,23 @@ class EdgeConnect():
             # outputFinal = Image.fromarray(output_)
             # outputFinal.save(path)
 
-            # #
-            # # Create an SR object
-            # # sr = dnn_superres.DnnSuperResImpl_create()
-            # # Read image
-            # image_sr = cv2.imread(path)
-            # # Read the desired model
+            # UPSCALE #
+            # Create an SR object
+            # sr = dnn_superres.DnnSuperResImpl_create()
+            # Read image
+            image_sr = cv2.imread(path)
+            # Read the desired model
             # model_sr = "EDSR_x3.pb"
-            # sr.readModel(model_sr)
-            # # Set the desired model and scale to get correct pre- and post-processing
-            # sr.setModel("edsr", 3)
-            # # Upscale the image
-            # result_sr = sr.upsample(image_sr)
-            # # Save the image
-            # cv2.imwrite(path, result_sr)
-            # #
+            model_sr = "FSRCNN_x4.pb"
+            sr.readModel(model_sr)
+            # Set the desired model and scale to get correct pre- and post-processing
+            sr.setModel("fsrcnn", 4)
+            # Upscale the image
+            result_sr = sr.upsample(image_sr)
+            # Save the image
+            cv2.imwrite(path, result_sr)
+            #
+            # UPSCALE #
 
             if self.debug:
                 edges = self.postprocess(1 - edges)[0]
